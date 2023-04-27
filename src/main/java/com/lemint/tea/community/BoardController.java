@@ -1,11 +1,14 @@
 package com.lemint.tea.community;
 
+import com.lemint.tea.community.dto.BoardAttachPostRequest;
 import com.lemint.tea.community.dto.BoardPostRequest;
 import com.lemint.tea.community.dto.BoardResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -21,8 +24,9 @@ public class BoardController {
   }
 
   @PostMapping("/create")
-  public ResponseEntity createBoard(@RequestBody BoardPostRequest dto) {
-    Long id = service.createBoard(dto);
+  public ResponseEntity createBoard(@RequestBody BoardPostRequest boardDto
+  , @RequestBody List<BoardAttachPostRequest> attachDtoList) {
+    Long id = service.createBoard(boardDto, attachDtoList);
     return ResponseEntity.ok(id);
   }
 
