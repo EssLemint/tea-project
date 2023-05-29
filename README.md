@@ -1,4 +1,4 @@
-# tea-project
+# Tea-project
 Tea Personal Project
 
 * 게시판 [개인] 프로젝트입니다.
