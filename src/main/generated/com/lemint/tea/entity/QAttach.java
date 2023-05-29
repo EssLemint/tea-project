@@ -21,8 +21,6 @@ public class QAttach extends EntityPathBase<Attach> {
 
     public final QBaseEntity _super = new QBaseEntity(this);
 
-    public final StringPath alt = createString("alt");
-
     public final StringPath contentType = createString("contentType");
 
     //inherited
@@ -41,8 +39,6 @@ public class QAttach extends EntityPathBase<Attach> {
     public final StringPath path = createString("path");
 
     public final NumberPath<Long> size = createNumber("size", Long.class);
-
-    public final StringPath title = createString("title");
 
     //inherited
     public final BooleanPath useFlag = _super.useFlag;

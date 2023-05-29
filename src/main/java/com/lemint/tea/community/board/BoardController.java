@@ -1,14 +1,14 @@
-package com.lemint.tea.community;
+package com.lemint.tea.community.board;
 
-import com.lemint.tea.community.dto.BoardAttachPostRequest;
-import com.lemint.tea.community.dto.BoardPostRequest;
-import com.lemint.tea.community.dto.BoardResponse;
+import com.lemint.tea.community.request.BoardPostRequest;
+import com.lemint.tea.community.response.BoardResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -23,10 +23,9 @@ public class BoardController {
     return ResponseEntity.ok(response);
   }
 
-  @PostMapping("/create")
-  public ResponseEntity createBoard(@RequestBody BoardPostRequest boardDto
-  , @RequestBody List<BoardAttachPostRequest> attachDtoList) {
-    Long id = service.createBoard(boardDto, attachDtoList);
+  @PostMapping(value = "/create")
+  public ResponseEntity createBoard(@ModelAttribute @Valid BoardPostRequest dto) throws IOException {
+    Long id = service.createBoard(dto);
     return ResponseEntity.ok(id);
   }
 

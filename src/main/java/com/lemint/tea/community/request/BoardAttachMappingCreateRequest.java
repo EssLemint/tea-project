@@ -1,4 +1,4 @@
-package com.lemint.tea.community.dto;
+package com.lemint.tea.community.request;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

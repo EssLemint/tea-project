@@ -49,7 +49,7 @@ public class QBoardAttachMapping extends EntityPathBase<BoardAttachMapping> {
     public QBoardAttachMapping(Class<? extends BoardAttachMapping> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.attach = inits.isInitialized("attach") ? new QAttach(forProperty("attach")) : null;
-        this.board = inits.isInitialized("board") ? new QBoard(forProperty("board")) : null;
+        this.board = inits.isInitialized("board") ? new QBoard(forProperty("board"), inits.get("board")) : null;
         this.id = inits.isInitialized("id") ? new QBoardAttachMappingEmbeddedId(forProperty("id")) : null;
     }
 

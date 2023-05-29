@@ -25,10 +25,11 @@ public class BoardAttachMapping {
   private BoardAttachMappingEmbeddedId id;
 
   @ColumnDefault("0")
+  @Column(name = "sort",nullable = false)
   @Comment("정렬 순서")
   private Integer sort;
 
-  @MapsId("boardId")
+  @MapsId("boardId")  //designates a ManyToOne or OneToOne relationship attribute that provides the mapping for an EmbeddedId primary key
   @ManyToOne(fetch = LAZY)
   @JoinColumn(name = "board_id", nullable = false)
   @Comment("게시글 일련 번호")

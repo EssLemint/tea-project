@@ -40,30 +40,19 @@ public class Attach extends BaseEntity{
   @Comment("파일 크기")
   private Long size;
 
-  @Comment("대체 문구")
-  private String alt;
-
-  @Comment("제목")
-  private String title;
-
-  @Transient
-  private URL url;
-
-  private Attach(String contentType, String filename, String path, Long size, String alt, String title) {
+  private Attach(String contentType, String filename, String path, Long size) {
     log.info("Attach NEW");
 
     this.contentType = contentType;
     this.filename = filename;
     this.path = path;
     this.size = size;
-    this.alt = alt;
-    this.title = title;
   }
 
-  public static Attach createEntity(String contentType, String filename, String path, Long size, String alt, String title) {
+  public static Attach createEntity(String contentType, String filename, String path, Long size) {
     log.info("Attach createEntity");
 
-    return new Attach(contentType, filename, path, size, alt, title);
+    return new Attach(contentType, filename, path, size);
   }
 
   public void removeEntity() {

@@ -14,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @Entity
-@Table(name = "TB_COMMUNITY_BOARD")
+@Table(name = "TB_BOARD")
 @Getter
 @DynamicInsert
 @DynamicUpdate
@@ -24,21 +24,24 @@ public class Board extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Comment("일련 번호")
+  @Column(name = "id")
   private Long id;
 
   @Comment("제목")
-  @Column(nullable = false, length = 100)
+  @Column(name = "title",nullable = false, length = 100)
   private String title;
 
   @Lob
   @Comment("본문")
-  @Column(nullable = false)
+  @Column(name = "content",nullable = false)
   private String content;
 
   @Comment("작성자")
+  @Column(name = "createBy",nullable = false)
   private Long createBy;
 
   @Comment("수정자")
+  @Column(name = "modifiedBy",nullable = false)
   private Long modifiedBy;
 
   @Comment("조회수")
@@ -48,15 +51,20 @@ public class Board extends BaseEntity {
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "board")
   private List<BoardAttachMapping> attachList;
 
-  private Board(String title, String content, Long createBy, Long modifiedBy) {
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "member_id")
+  private Member member;
+
+  private Board(String title, String content, Long createBy, Long modifiedBy, Member member) {
     this.title = title;
     this.content = content;
     this.createBy = createBy;
     this.modifiedBy = modifiedBy;
+    this.member = member;
   }
 
-  public static Board createBoard(String title, String content, Long createBy, Long modifiedBy) {
-    return new Board(title, content, createBy, modifiedBy);
+  public static Board createBoard(String title, String content, Long createBy, Long modifiedBy, Member member) {
+    return new Board(title, content, createBy, modifiedBy, member);
   }
 
   public void updateBoard(String title, String content, Long modifiedBy) {

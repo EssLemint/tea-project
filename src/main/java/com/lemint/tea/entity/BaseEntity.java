@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners(AuditingEntityListener.class)  //update 자동
 public class BaseEntity {
 
   @Comment("사용 여부")
