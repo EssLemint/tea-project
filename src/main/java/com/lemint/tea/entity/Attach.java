@@ -51,7 +51,6 @@ public class Attach extends BaseEntity{
 
   public static Attach createEntity(String contentType, String filename, String path, Long size) {
     log.info("Attach createEntity");
-
     return new Attach(contentType, filename, path, size);
   }
 

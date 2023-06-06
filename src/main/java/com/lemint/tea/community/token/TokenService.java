@@ -26,4 +26,10 @@ public class TokenService {
     return id;
   }
 
+  public Boolean checkToken(Long id, String jwt) {
+    Token token = repository.findTokenByMemberId(id);
+    return token.getAccessToken().equals(token);
+  }
+
+
 }

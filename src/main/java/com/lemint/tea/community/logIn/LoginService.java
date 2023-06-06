@@ -37,17 +37,16 @@ public class LoginService {
     Member member = memberRepository.findMemberByUserId(request.getUserId());
     if (!Objects.isNull(member)) {
       if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
-        throw new CustomException(ErrorCode.BAD_PASSWORD);
+        throw new CustomException(ErrorCode.BAD_PASSWORD); //비밀번호 오류
       }
-    } else throw new EntityNotFoundException("사용자를 찾을 수 없습니다.");
+    } else throw new CustomException(ErrorCode.USER_NOT_FOUND); //사용자 없음
 
     //TreadLocal 저장발
-    tokenUtil.setSignedId(member.getId());
+    tokenUtil.setThreadLocal(member.getId(), member.getRole());
     //Token 설정
-    String accessToken = tokenUtil.createAccessToken(member.getId(), member.getUserId());
+    String accessToken = tokenUtil.createAccessToken(member.getId(), member.getUserId(), String.valueOf(member.getRole()));
     //토큰 저장
     tokenService.saveToken(accessToken, member);
-
     return member.getId();
   }
 }

@@ -36,6 +36,13 @@ public class BoardService {
   private final AttachMappingRepository attachMappingRepository;
   private final FileUtil fileUtil;
 
+  /**
+   * Board Detail  상세 게시글
+   * @param  id :  게시글 번호
+   * @return 게시글 response
+   * @author KJE
+   * @since  2023-06-06
+   * */
   public BoardResponse getBoardDetail(Long id) {
     Board board = repository.findById(id).orElseThrow(EntityNotFoundException::new);
     board.countViews();
@@ -48,22 +55,28 @@ public class BoardService {
         .build();
   }
 
+  /**
+   *  Board Create 게시글 생성
+   *
+   * @param dto
+   * @return board id
+   * @author KJE
+   * @since  2023-06-06
+   * */
   @Transactional
   public Long createBoard(BoardPostRequest dto) throws IOException {
     log.info("BoardService createBoard");
     Long id = signedId.get();
 
+    //id > 1L로 임시 실행
     Member member = memberRepository.findById(1L).orElseThrow(EntityNotFoundException::new);
-
-    /**
-     * 현재 board에 attachmapping이 1대N의 연관 관계로 저장 할 시 Mapping도 가지고 저장을 해야함.
-     * */
 
     Board entity = Board.createBoard(dto.getTitle(), dto.getContent()
         , 1L, 1L, member);
     Board board = repository.save(entity);
 
-    if (!Objects.isNull(dto.getFiles()) &&  (dto.getFiles().size() != 0) ){
+    //파일 저장
+    if (!Objects.isNull(dto.getFiles()) &&  !dto.getFiles().isEmpty()){
       //Attach 생성, 저장
       List<Attach> attachList = new ArrayList<>();
       List<MultipartFile> dtoFiles = dto.getFiles();
@@ -88,15 +101,16 @@ public class BoardService {
       }
       attachMappingRepository.saveAll(mappingList);
     }
-
     return board.getId();
   }
 
   @Transactional
-  public Long updateBoard(Long id, BoardPostRequest dto) {
+  public Long updateBoard(Long id, BoardPostRequest dto) throws IOException {
     Board board = repository.findById(id).orElseThrow(EntityNotFoundException::new);
-    board.updateBoard(dto.getTitle(), dto.getContent(), 1L);
+    //TODO
+    //파일 저장을 할때 어떻게... 처리 할지...
 
+    board.updateBoard(dto.getTitle(), dto.getContent(), 1L);  //게시판 제목, 내용, 수정자
     return board.getId();
   }
 

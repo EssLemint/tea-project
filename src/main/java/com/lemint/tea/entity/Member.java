@@ -1,5 +1,6 @@
 package com.lemint.tea.entity;
 
+import com.lemint.tea.enums.Role;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -36,15 +37,21 @@ public class Member extends BaseEntity{
   @Column(name = "user_name", nullable = false, length = 20)
   private String name;
 
+  @Enumerated(EnumType.STRING)
+  @Comment("권한")
+  private Role role;
 
-  private Member(String userId, String password, String name) {
+
+
+  private Member(String userId, String password, String name, Role role) {
     this.userId = userId;
     this.password = password;
     this.name = name;
+    this.role = role;
   }
 
-  public static Member createMember(String userId, String password, String name) {
-    return new Member(userId, password, name);
+  public static Member createMember(String userId, String password, String name, Role role) {
+    return new Member(userId, password, name, role);
   }
 
   public void updateMember(String password, String name) {
