@@ -18,7 +18,7 @@ import static com.lemint.tea.enums.Role.SecRoles.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("board")
+@RequestMapping("/board")
 public class BoardController {
   private final BoardService service;
 

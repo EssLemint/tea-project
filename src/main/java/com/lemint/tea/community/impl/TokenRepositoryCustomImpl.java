@@ -18,7 +18,6 @@ public class TokenRepositoryCustomImpl implements TokenRepositoryCustom {
     JPAQuery<Token> query = queryFactory.select(token)
         .from(token)
         .where(token.memberId.eq(id));
-
     return query.fetchOne();
   }
 }

@@ -10,12 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("tree")
 public class TreeController {
 
+  /**
+   * @apiNote 첫 접근 TEST
+   * @param
+   * @return application 접근 TEST
+   * @since 2023-06-18
+   * */
   @GetMapping("/check")
   String checkConnect() {
     log.info("================= CHECK CONTROLLER START=================");
-
     log.info("================= CHECK CONTROLLER END=================");
-
     return "index";
   }
 }

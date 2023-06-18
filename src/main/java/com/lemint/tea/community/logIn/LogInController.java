@@ -1,6 +1,7 @@
 package com.lemint.tea.community.logIn;
 
 import com.lemint.tea.community.request.LoginRequest;
+import com.lemint.tea.community.response.TokenResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +23,16 @@ public class LogInController {
 
   private final LoginService loginService;
 
+  /**
+   * @apiNote 로그인
+   * @param request
+   * @return 사용자 seq num
+   * @since 2023-06-18
+   * */
   @Secured({ANONYMOUS, USER, ADMIN, MANAGER})
   @GetMapping("/member")
   public ResponseEntity<?> login(@RequestBody @Valid LoginRequest request) {
-    Long memberSeq = loginService.login(request);
-    return ResponseEntity.ok(memberSeq);
+    TokenResponse tokenResponse = loginService.login(request);
+    return ResponseEntity.ok(tokenResponse);
   }
 }

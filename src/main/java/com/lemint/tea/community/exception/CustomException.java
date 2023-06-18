@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class CustomException extends RuntimeException {
-
   private ErrorCode errorCode;
 
   public CustomException(ErrorCode errorCode) {

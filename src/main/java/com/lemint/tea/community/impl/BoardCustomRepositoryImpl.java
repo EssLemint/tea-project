@@ -6,8 +6,5 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class BoardCustomRepositoryImpl implements BoardCustomRepository {
-
   private final JPAQueryFactory queryFactory;
-
-
 }

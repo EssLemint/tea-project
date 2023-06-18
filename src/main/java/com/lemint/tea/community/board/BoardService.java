@@ -69,10 +69,10 @@ public class BoardService {
     Long id = signedId.get();
 
     //id > 1L로 임시 실행
-    Member member = memberRepository.findById(1L).orElseThrow(EntityNotFoundException::new);
+    Member member = memberRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 
     Board entity = Board.createBoard(dto.getTitle(), dto.getContent()
-        , 1L, 1L, member);
+        , id, id, member);
     Board board = repository.save(entity);
 
     //파일 저장
@@ -108,10 +108,49 @@ public class BoardService {
   public Long updateBoard(Long id, BoardPostRequest dto) throws IOException {
     Board board = repository.findById(id).orElseThrow(EntityNotFoundException::new);
     //TODO
-    //파일 저장을 할때 어떻게... 처리 할지...
+    //파일 저장 >> 현재 보드 파일 오리지널 파일이름 확인 중복, 들어오는 sourceFile이 없다면
+    //내용만 수정, 추가적으로 변경된 파일만 수정을 할것인가.. 아니면 기존 파일들 다 삭제 처리하고 새로 등록할것인가
+    // s3접근, DB 자주 접근 중 뭐로 잡아야하는지 아니면 둘다...?
+    if (!Objects.isNull(dto.getFiles()) || !checkFileName(id, dto)) {
 
-    board.updateBoard(dto.getTitle(), dto.getContent(), 1L);  //게시판 제목, 내용, 수정자
+    }
+
+    board.updateBoard(dto.getTitle(), dto.getContent(), id);  //게시판 제목, 내용, 수정자
     return board.getId();
+  }
+
+  /**
+   * 파일 전환 확인
+   * @param id, dto
+   * @return true : 같을 시, false : 파일이 달라졌을떄
+   * */
+  private boolean checkFileName(Long id, BoardPostRequest dto) {
+    List<String> fileNames = findAttachFileNamesByBoardId(id);  //기존 파일
+    List<MultipartFile> multipartFiles = dto.getFiles();  //들어온 파일
+    boolean flag = false;
+
+    for (String name : fileNames) {
+      for (MultipartFile file : multipartFiles) {
+        if (name.equalsIgnoreCase(file.getName())) {
+          flag = true;
+        }
+      }
+    }
+
+    return flag;
+  }
+
+  private List<String> findAttachFileNamesByBoardId(Long boardId) {
+    //board id > attach mapping > mapping으로 attach id 찾기
+    List<BoardAttachMapping> mappingIds = attachMappingRepository.findAttachMappingByBoardId(boardId);
+
+    List<String> fileNames = new ArrayList<>();
+    for (BoardAttachMapping mappings : mappingIds) {
+      Attach attach = attachRepository.findById(mappings.getAttach().getId()).orElseThrow(EntityNotFoundException::new);
+      String filename = attach.getFilename();
+      fileNames.add(filename);
+    }
+    return fileNames;
   }
 
 }

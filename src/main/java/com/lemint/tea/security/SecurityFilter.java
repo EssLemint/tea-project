@@ -40,7 +40,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
       if (Strings.hasLength(jwt)) {
         Claims claims = tokenUtil.checkJwt(jwt);
-        id = Long.parseLong(String.valueOf(claims.get("userId")));
+        id = Long.parseLong(String.valueOf(claims.get("id")));
         role = Role.valueOf(String.valueOf(claims.get("role")));
 
         tokenUtil.validateAccessToken(id, jwt.replace("Bearer ", "").trim());
@@ -60,7 +60,6 @@ public class SecurityFilter extends OncePerRequestFilter {
 
       filterChain.doFilter(request, response);
     } catch (Exception e) {
-
       SecurityContextHolder.clearContext();
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       log.info("ExpiredJwtException error = {}", e.getMessage());

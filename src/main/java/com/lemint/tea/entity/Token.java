@@ -29,9 +29,11 @@ public class Token {
   private Long memberId;
 
   @Comment("접속 토큰")
+  @Column(columnDefinition = "LONGTEXT")
   private String accessToken;
 
   @Comment("리프레시 토큰")
+  @Column(columnDefinition = "LONGTEXT")
   private String refreshToken;
 
   @CreationTimestamp
@@ -51,4 +53,9 @@ public class Token {
   public static Token createToken(Long memberId, String accessToken, String refreshToken) {
     return new Token(memberId, accessToken, refreshToken);
   }
+
+  public void updateAccessToken(String accessToken) {
+    this.accessToken = accessToken;
+  }
+
 }

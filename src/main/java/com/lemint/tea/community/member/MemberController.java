@@ -29,7 +29,7 @@ public class MemberController {
     return ResponseEntity.ok(response);
   }
 
-  @Secured({ANONYMOUS})
+  @Secured(ANONYMOUS)
   @PostMapping("/save")
   public ResponseEntity<?> createMember(@RequestBody @Valid MemberSaveRequest request) {
     Long id = service.saveNewMember(request);

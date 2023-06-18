@@ -9,6 +9,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Config of AWS S3
+ *
+ * @author KJE
+ * @apiNote S3 초기 설정
+ *
+ * */
 @Slf4j
 @Configuration
 public class S3Config {

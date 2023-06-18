@@ -24,7 +24,6 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
             , member.name
         )).from(member)
         .where(member.userId.eq(userId).and(member.password.eq(password)));
-
     return query.fetchOne();
   }
 
