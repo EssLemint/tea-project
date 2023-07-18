@@ -20,7 +20,6 @@ import static com.lemint.tea.enums.Role.SecRoles.*;
 @RequiredArgsConstructor
 public class TokenUtil {
   private final TokenService tokenService;
-
   public static final String JWT_STRING = "5f57bb1b29cc240d42d575006dc04689e4f23833b7cd7b5dd28ab60105f039cbb5b347cb6e13e98966f7eea88121b34dd5ba08272f7f537d87a0e709ff3bd7c1";
   public static final SecretKey key = Keys.hmacShaKeyFor(JWT_STRING.getBytes(StandardCharsets.UTF_8));
   public static ThreadLocal<Long> signedId = new ThreadLocal<>(); //사용자 seq저장

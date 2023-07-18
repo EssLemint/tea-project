@@ -78,7 +78,7 @@ public class FileUtil {
 
   /**
    * @apiNote MultipartFile to File
-   * @param multipart file
+   * @param  file
    * @return file, or optional empty
    * @since 2023-06-18
    * */

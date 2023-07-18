@@ -3,8 +3,6 @@ package com.lemint.tea.community.member;
 import com.lemint.tea.community.member.dto.MemberSaveRequest;
 import com.lemint.tea.community.request.MemberGetRequest;
 import com.lemint.tea.community.response.MemberGetResponse;
-import com.lemint.tea.enums.Role;
-import com.lemint.tea.enums.Role.SecRoles;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

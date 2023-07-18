@@ -24,7 +24,6 @@ public class TokenService {
     Token entity = Token.createToken(member.getId(), token, null);
     //refreshToken 이후
     Long id = repository.save(entity).getId();
-
     return id;
   }
 

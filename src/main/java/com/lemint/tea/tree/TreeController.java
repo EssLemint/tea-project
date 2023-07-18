@@ -19,7 +19,7 @@ public class TreeController {
   @GetMapping("/check")
   String checkConnect() {
     log.info("================= CHECK CONTROLLER START=================");
-    log.info("================= CHECK CONTROLLER END=================");
+    log.info("================= CHECK CONTROLLER END===================");
     return "index";
   }
 }

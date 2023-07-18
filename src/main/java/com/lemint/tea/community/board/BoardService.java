@@ -71,8 +71,7 @@ public class BoardService {
     //id > 1L로 임시 실행
     Member member = memberRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 
-    Board entity = Board.createBoard(dto.getTitle(), dto.getContent()
-        , id, id, member);
+    Board entity = Board.createBoard(dto.getTitle(), dto.getContent(), id, id, member);
     Board board = repository.save(entity);
 
     //파일 저장

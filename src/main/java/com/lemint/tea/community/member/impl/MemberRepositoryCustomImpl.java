@@ -1,4 +1,4 @@
-package com.lemint.tea.community.impl;
+package com.lemint.tea.community.member.impl;
 
 import com.lemint.tea.community.member.MemberRepositoryCustom;
 import com.lemint.tea.community.member.dto.MemberGetDto;

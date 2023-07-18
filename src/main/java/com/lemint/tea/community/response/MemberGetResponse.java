@@ -1,13 +1,10 @@
 package com.lemint.tea.community.response;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Data
+@Getter
 @NoArgsConstructor
 @ToString
 public class MemberGetResponse {

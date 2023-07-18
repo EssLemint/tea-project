@@ -1,4 +1,4 @@
-package com.lemint.tea.community.impl;
+package com.lemint.tea.community.token.impl;
 
 import com.lemint.tea.community.token.TokenRepositoryCustom;
 import com.lemint.tea.entity.Token;

@@ -1,4 +1,4 @@
-package com.lemint.tea.community.impl;
+package com.lemint.tea.community.board.impl;
 
 import com.lemint.tea.community.board.BoardCustomRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;

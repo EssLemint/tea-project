@@ -31,14 +31,14 @@ public class BoardController {
 
   @Secured({USER, MANAGER, ADMIN})
   @PostMapping(value = "/create")
-  public ResponseEntity createBoard(@ModelAttribute @Valid BoardPostRequest dto) throws IOException {
+  public ResponseEntity<?> createBoard(@ModelAttribute @Valid BoardPostRequest dto) throws IOException {
     Long id = service.createBoard(dto);
     return ResponseEntity.ok(id);
   }
 
   @Secured({USER, MANAGER, ADMIN})
   @PutMapping("/{id}")
-  public ResponseEntity updateBoard(@PathVariable Long id, @RequestBody BoardPostRequest dto) throws IOException {
+  public ResponseEntity<?> updateBoard(@PathVariable Long id, @RequestBody BoardPostRequest dto) throws IOException {
     service.updateBoard(id, dto);
     return ResponseEntity.ok(id);
   }
