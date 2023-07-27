@@ -1,6 +1,7 @@
 package com.lemint.tea.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lemint.tea.community.member.MemberService;
 import com.lemint.tea.community.token.TokenService;
 import com.lemint.tea.entity.Member;
 import com.lemint.tea.enums.Role;
@@ -27,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.net.http.HttpRequest;
 
 import static com.lemint.tea.common.ThreadToken.threadAccessToken;
+import static com.lemint.tea.enums.Role.ROLE_ANONYMOUS;
+import static com.lemint.tea.enums.Role.ROLE_USER;
 import static com.lemint.tea.util.TokenUtil.signedId;
 import static com.lemint.tea.util.TokenUtil.signedRole;
 
@@ -39,7 +42,19 @@ public class CommonExtension {
   @Autowired
   private TokenService tokenService;
   @Autowired
+  private MemberService memberService;
+  @Autowired
   private TokenUtil tokenUtil;
+
+  /**
+   * @apiNote invoke authentication
+   * @author KJE
+   * @since 2023-07-17
+   * */
+  public void setAnonymous() {
+    log.info("setAnonymous");
+    authentication(0L, ROLE_ANONYMOUS);
+  }
 
   /**
    * @apiNote invoke authentication
@@ -48,7 +63,7 @@ public class CommonExtension {
    * */
   public void setSignedUser() {
     log.info("setSignedUser");
-    authentication(3L, "test", Role.ROLE_USER);
+    authentication(3L, ROLE_USER);
   }
 
   /**
@@ -56,15 +71,13 @@ public class CommonExtension {
    * @author KJE
    * @since 2023-07-17
    * */
-  private void authentication(Long id, String userId, Role role) {
+  private void authentication(Long id, Role role) {
     log.info("create authentication");
 
-    if (!role.equals(Role.ROLE_ANONYMOUS)) {
-      String accessToken = tokenUtil.createAccessToken(id, userId, role.name());
-      Member member = Member.createMember(userId, "test1234", "testname", role);
-      tokenService.saveToken(accessToken, member);
-      log.info("accessToken = {}", accessToken);
+    if (!role.equals(ROLE_ANONYMOUS)) { //사용자가 익명이 아닐시 토큰 발급
+      String accessToken = tokenUtil.createAccessToken(id, "test", Role.SecRoles.USER);
       threadAccessToken.set(accessToken);
+      tokenService.saveToken(accessToken, id);
     }
 
     signedId.set(id);
@@ -77,6 +90,11 @@ public class CommonExtension {
             id, "{noop}", AuthorityUtils.createAuthorityList(role.name())
         )
     );
+
+    log.info("threadAccessToken = {}", threadAccessToken.get());
+    log.info("signedId = {}", signedId.get());
+    log.info("signedRole = {}", signedRole.get());
+    log.info("SecurityContextHolder = {}", SecurityContextHolder.getContext());
   }
 
 }

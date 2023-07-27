@@ -24,6 +24,7 @@ public class TokenUtil {
   public static final SecretKey key = Keys.hmacShaKeyFor(JWT_STRING.getBytes(StandardCharsets.UTF_8));
   public static ThreadLocal<Long> signedId = new ThreadLocal<>(); //사용자 seq저장
   public static ThreadLocal<Role> signedRole = new ThreadLocal<>(); //사용자 role 저장
+  public static ThreadLocal<String> threadAccessToken = new ThreadLocal<>(); //사용자 token 저장
 
   /**
    * @apiNote access token 생성

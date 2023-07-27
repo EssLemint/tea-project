@@ -66,7 +66,7 @@ public class LoginService {
     //Token 설정
     String accessToken = tokenUtil.createAccessToken(signedId.get(), member.getUserId(), String.valueOf(signedRole.get()));
     //토큰 저장
-    tokenService.saveToken(accessToken, member);
+    tokenService.saveToken(accessToken, signedId.get());
     return TokenResponse.builder()
         .id(member.getId())
         .role(String.valueOf(signedRole))

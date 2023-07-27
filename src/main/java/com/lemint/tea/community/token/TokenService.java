@@ -20,11 +20,11 @@ public class TokenService {
   }
 
   @Transactional
-  public Long saveToken(String token, Member member) {
-    Token entity = Token.createToken(member.getId(), token, null);
-    //refreshToken 이후
-    Long id = repository.save(entity).getId();
-    return id;
+  public Long saveToken(String token, Long id) {
+    Token entity = Token.createToken(id, token, null);
+    //refreshToken 적용 예정
+    Long tokenId = repository.save(entity).getId();
+    return tokenId;
   }
 
   public Boolean checkToken(Long id, String jwt) {

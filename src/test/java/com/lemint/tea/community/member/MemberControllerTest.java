@@ -64,6 +64,11 @@ class MemberControllerTest extends CommonExtension {
   @Test
   @WithMockUser
   void findMemberByIdAndPassword() throws Exception {
+    /**
+     * 우선 filter 시큐리티는 spring안으로 들어오기 전에 진행되는 부분이기 때문에
+     * 가라 로그인을 진행할껀데...
+     *
+     * */
     setSignedUser();
 
     MvcResult mvcResult = mockMvc.perform(get("/member/get")

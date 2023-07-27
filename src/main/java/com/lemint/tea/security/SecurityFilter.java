@@ -17,6 +17,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.lemint.tea.util.TokenUtil.*;
+import static io.jsonwebtoken.lang.Strings.hasLength;
 import static java.util.Optional.ofNullable;
 
 @Slf4j
@@ -31,24 +33,29 @@ public class SecurityFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
     log.info("==================== SecurityFilter START ====================");
-
+    log.info("request = {}", request.getHeader("Authorization"));
     try {
       String authorization = request.getHeader("Authorization");
-      String jwt = ofNullable(authorization).orElse(null);
       Long id = 0L;
       Role role = Role.ROLE_ANONYMOUS;
+      String accessToken = "";
 
-      if (Strings.hasLength(jwt)) {
-        Claims claims = tokenUtil.checkJwt(jwt);
+      if (hasLength(authorization)) {
+        accessToken = authorization.replace("Bearer ", "");
+
+        Claims claims = tokenUtil.checkJwt(authorization);
         id = Long.parseLong(String.valueOf(claims.get("id")));
         role = Role.valueOf(String.valueOf(claims.get("role")));
-
-        tokenUtil.validateAccessToken(id, jwt.replace("Bearer ", "").trim());
       }
 
+      threadAccessToken.set(accessToken);
+      signedId.set(id);
+      signedRole.set(role);
+
+      Role roleauth = signedRole.get();
       SecurityContextHolder.getContext().setAuthentication(
           new UsernamePasswordAuthenticationToken(
-              id, "{noop}", AuthorityUtils.createAuthorityList(role.name())
+              roleauth, "{noop}", AuthorityUtils.createAuthorityList(roleauth.name())
           )
       );
 
