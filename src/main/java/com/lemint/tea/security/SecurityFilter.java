@@ -45,6 +45,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         tokenUtil.validateAccessToken(id, jwt.replace("Bearer ", "").trim());
       }
+
       SecurityContextHolder.getContext().setAuthentication(
           new UsernamePasswordAuthenticationToken(
               id, "{noop}", AuthorityUtils.createAuthorityList(role.name())

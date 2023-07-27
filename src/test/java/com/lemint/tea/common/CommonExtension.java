@@ -61,11 +61,10 @@ public class CommonExtension {
 
     if (!role.equals(Role.ROLE_ANONYMOUS)) {
       String accessToken = tokenUtil.createAccessToken(id, userId, role.name());
-      Member member = Member.createMember(userId, "test1234", "teatname", role);
+      Member member = Member.createMember(userId, "test1234", "testname", role);
       tokenService.saveToken(accessToken, member);
       log.info("accessToken = {}", accessToken);
       threadAccessToken.set(accessToken);
-//      setAuthTokenHeader(accessToken);
     }
 
     signedId.set(id);
@@ -78,10 +77,6 @@ public class CommonExtension {
             id, "{noop}", AuthorityUtils.createAuthorityList(role.name())
         )
     );
-
-    log.info("id = {}", id);
-    log.info("role = {}", role);
-    log.info("SecurityContextHolder = {}", SecurityContextHolder.getContext());
   }
 
 }
