@@ -9,6 +9,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * @apiNote adding token config to security filter config
+ * @author lemint
+ * @since 2023-07-30
+ * */
 @Slf4j
 @RequiredArgsConstructor
 public class TokenConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
@@ -19,7 +24,6 @@ public class TokenConfig extends SecurityConfigurerAdapter<DefaultSecurityFilter
   @Override
   public void configure(HttpSecurity http) throws Exception {
     SecurityFilter filter = new SecurityFilter(tokenUtil);
-
     http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
   }
 }

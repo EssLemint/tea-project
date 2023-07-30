@@ -31,7 +31,13 @@ public class LoginService {
   private final MemberRepository memberRepository;
   private final PasswordEncoder passwordEncoder;
 
-
+  /**
+   * @apiNote login
+   * @param request
+   * @return token response
+   * @author lemint
+   * @since 2023-07-30
+   * */
   @Transactional
   public TokenResponse login(LoginRequest request) {
     //사용자 확인
@@ -42,8 +48,7 @@ public class LoginService {
       }
     } else throw new CustomException(ErrorCode.USER_NOT_FOUND); //사용자 없음
 
-    //TreadLocal 저장발
-    tokenUtil.setThreadLocal(member.getId(), member.getRole());
+
     //기존에 존재하는 토큰 확인
     Token token = tokenService.findTokenByMemberSeq(member.getId());
     if (!Objects.isNull(token)) {
@@ -67,6 +72,10 @@ public class LoginService {
     String accessToken = tokenUtil.createAccessToken(signedId.get(), member.getUserId(), String.valueOf(signedRole.get()));
     //토큰 저장
     tokenService.saveToken(accessToken, signedId.get());
+
+    //TreadLocal 저장
+    tokenUtil.setThreadLocal(member.getId(), member.getRole(), accessToken);
+
     return TokenResponse.builder()
         .id(member.getId())
         .role(String.valueOf(signedRole))

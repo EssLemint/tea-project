@@ -18,12 +18,13 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
   private final JPAQueryFactory queryFactory;
 
   @Override
-  public MemberGetDto findMemberByIdAndPassword(String userId, String password) {
+  public MemberGetDto findMemberInfoByUserId(String userId) {
     JPAQuery<MemberGetDto> query = queryFactory.select(Projections.fields(MemberGetDto.class
             , member.id
             , member.name
+            , member.password
         )).from(member)
-        .where(member.userId.eq(userId).and(member.password.eq(password)));
+        .where(member.userId.eq(userId));
     return query.fetchOne();
   }
 

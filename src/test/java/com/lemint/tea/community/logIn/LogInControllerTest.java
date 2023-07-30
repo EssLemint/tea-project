@@ -88,11 +88,11 @@ class LogInControllerTest {
     //when
     MvcResult mvcResult = mockMvc.perform(get("/login/member")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(LoginRequest
-                .builder()
-                .userId(id)
-                .password(pwd)
-                .build()))).andDo(print())
+            .content(objectMapper.writeValueAsString(
+                LoginRequest.builder()
+                    .userId(id)
+                    .password(pwd)
+                    .build()))).andDo(print())
         .andExpect(status().isOk())
         .andReturn();
 

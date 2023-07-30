@@ -3,7 +3,6 @@ package com.lemint.tea.security;
 import com.lemint.tea.enums.Role;
 import com.lemint.tea.util.TokenUtil;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.lang.Strings;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,16 +15,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import static com.lemint.tea.util.TokenUtil.*;
 import static io.jsonwebtoken.lang.Strings.hasLength;
-import static java.util.Optional.ofNullable;
 
 @Slf4j
 @RequiredArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter {
 
   private TokenUtil tokenUtil;
+
   public SecurityFilter(TokenUtil tokenUtil) {
     this.tokenUtil = tokenUtil;
   }
@@ -33,7 +33,6 @@ public class SecurityFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
     log.info("==================== SecurityFilter START ====================");
-    log.info("request = {}", request.getHeader("Authorization"));
     try {
       String authorization = request.getHeader("Authorization");
       Long id = 0L;
@@ -48,18 +47,19 @@ public class SecurityFilter extends OncePerRequestFilter {
         role = Role.valueOf(String.valueOf(claims.get("role")));
       }
 
-      threadAccessToken.set(accessToken);
-      signedId.set(id);
-      signedRole.set(role);
+      if (!Objects.isNull(signedRole) && !Objects.isNull(signedId)) {
+        id = signedId.get();
+        role = signedRole.get();
+        accessToken = threadAccessToken.get();
+      }
 
-      Role roleauth = signedRole.get();
       SecurityContextHolder.getContext().setAuthentication(
           new UsernamePasswordAuthenticationToken(
-              roleauth, "{noop}", AuthorityUtils.createAuthorityList(roleauth.name())
+              role, "{noop}", AuthorityUtils.createAuthorityList(role.name())
           )
       );
 
-      tokenUtil.setThreadLocal(id, role);
+      tokenUtil.setThreadLocal(id, role, accessToken);
 
       log.info("SecurityContextHolder = {}", SecurityContextHolder.getContext().getAuthentication());
       log.info("id = {}", id);

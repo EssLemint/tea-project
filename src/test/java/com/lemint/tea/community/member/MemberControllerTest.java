@@ -11,6 +11,7 @@ import com.lemint.tea.enums.Role;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,12 +63,12 @@ class MemberControllerTest extends CommonExtension {
 
 
   @Test
-  @WithMockUser
+  @DisplayName("사용자 정보 조회 단건")
   void findMemberByIdAndPassword() throws Exception {
     /**
      * 우선 filter 시큐리티는 spring안으로 들어오기 전에 진행되는 부분이기 때문에
-     * 가라 로그인을 진행할껀데...
-     *
+     * 가라 로그인으로 thread안에 role, id를 배정해주고 해당 thread 변수들을
+     * id, role안에 set.....이후 변수들 사용 << 로직 확인 필요
      * */
     setSignedUser();
 
@@ -77,8 +78,7 @@ class MemberControllerTest extends CommonExtension {
                 MemberGetRequest.builder()
                     .userId("test")
                     .password("testpassword1234")
-                    .build()))
-            .with(csrf())).andDo(print())
+                    .build()))).andDo(print())
         .andExpect(status().isOk())
         .andReturn();
 

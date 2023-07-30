@@ -40,7 +40,7 @@ public class BoardService {
    * Board Detail  상세 게시글
    * @param  id :  게시글 번호
    * @return 게시글 response
-   * @author KJE
+   * @author lemint
    * @since  2023-06-06
    * */
   public BoardResponse getBoardDetail(Long id) {
@@ -60,7 +60,7 @@ public class BoardService {
    *
    * @param dto
    * @return board id
-   * @author KJE
+   * @author lemint
    * @since  2023-06-06
    * */
   @Transactional
@@ -103,6 +103,13 @@ public class BoardService {
     return board.getId();
   }
 
+  /**
+   * @apiNote update board
+   * @param id, dto
+   * @return board id
+   * @author lemint
+   * @since 2023-07-30
+   * */
   @Transactional
   public Long updateBoard(Long id, BoardPostRequest dto) throws IOException {
     Board board = repository.findById(id).orElseThrow(EntityNotFoundException::new);
@@ -119,9 +126,11 @@ public class BoardService {
   }
 
   /**
-   * 파일 전환 확인
+   * @apiNote check change status of file attached to board
    * @param id, dto
-   * @return true : 같을 시, false : 파일이 달라졌을떄
+   * @return true : no changes, false : change
+   * @author lemint
+   * @since 2023-07-30
    * */
   private boolean checkFileName(Long id, BoardPostRequest dto) {
     List<String> fileNames = findAttachFileNamesByBoardId(id);  //기존 파일
@@ -135,13 +144,19 @@ public class BoardService {
         }
       }
     }
-
     return flag;
   }
 
-  private List<String> findAttachFileNamesByBoardId(Long boardId) {
+  /**
+   * @apiNote get file names by board id
+   * @param id
+   * @return List of file names
+   * @author lemint
+   * @since 2023-07-30
+   * */
+  private List<String> findAttachFileNamesByBoardId(Long id) {
     //board id > attach mapping > mapping으로 attach id 찾기
-    List<BoardAttachMapping> mappingIds = attachMappingRepository.findAttachMappingByBoardId(boardId);
+    List<BoardAttachMapping> mappingIds = attachMappingRepository.findAttachMappingByBoardId(id);
 
     List<String> fileNames = new ArrayList<>();
     for (BoardAttachMapping mappings : mappingIds) {

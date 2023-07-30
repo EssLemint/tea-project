@@ -15,10 +15,24 @@ public class TokenService {
 
   private final TokenRepository repository;
 
+  /**
+   * @apiNote find token by member seq
+   * @return token entity
+   * @author lemint
+   * @since 2023-07-30
+   * */
   public Token findTokenByMemberSeq(Long memberSeq) {
     return repository.findTokenByMemberId(memberSeq);
   }
 
+
+  /**
+   * @apiNote save token entity
+   * @param token, member id
+   * @return token seq
+   * @author lemint
+   * @since 2023-07-30
+   * */
   @Transactional
   public Long saveToken(String token, Long id) {
     Token entity = Token.createToken(id, token, null);
@@ -27,6 +41,13 @@ public class TokenService {
     return tokenId;
   }
 
+  /**
+   * @apiNote check token entity
+   * @param jwt, member id
+   * @return true : same token, false : different token
+   * @author lemint
+   * @since 2023-07-30
+   * */
   public Boolean checkToken(Long id, String jwt) {
     Token token = repository.findTokenByMemberId(id);
     return token.getAccessToken().equals(jwt);

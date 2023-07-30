@@ -1,5 +1,7 @@
 package com.lemint.tea.community.member;
 
+import com.lemint.tea.community.exception.CustomException;
+import com.lemint.tea.community.exception.ErrorCode;
 import com.lemint.tea.community.member.dto.MemberGetDto;
 import com.lemint.tea.community.member.dto.MemberSaveRequest;
 import com.lemint.tea.community.request.MemberGetRequest;
@@ -12,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 import static com.lemint.tea.enums.Role.*;
 
 @Slf4j
@@ -23,8 +27,17 @@ public class MemberService {
   private final MemberRepository repository;
   private final PasswordEncoder passwordEncoder;
 
-  public MemberGetResponse findMemberByIdAndPassword(MemberGetRequest request) {
-    MemberGetDto member = repository.findMemberByIdAndPassword(request.getUserId(), request.getPassword());
+  public MemberGetResponse findMemberInfoByUserId(MemberGetRequest request) {
+    MemberGetDto member = repository.findMemberInfoByUserId(request.getUserId());
+
+    if (Objects.isNull(member)) {
+      throw new CustomException(ErrorCode.USER_NOT_FOUND);
+    }
+
+    if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
+      throw new CustomException(ErrorCode.BAD_PASSWORD);
+    }
+
     MemberGetResponse response = MemberGetResponse.builder()
         .id(member.getId())
         .name(member.getName())

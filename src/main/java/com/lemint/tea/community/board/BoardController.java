@@ -22,6 +22,13 @@ import static com.lemint.tea.enums.Role.SecRoles.*;
 public class BoardController {
   private final BoardService service;
 
+  /**
+   * @apiNote get board detail
+   * @param id
+   * @return board detail response
+   * @author lemint
+   * @since 2023-07-30
+   * */
   @Secured({ANONYMOUS, USER, MANAGER, ADMIN})
   @GetMapping("/{id}")
   public ResponseEntity<?> getBoardDetail(@PathVariable Long id) {
@@ -29,6 +36,13 @@ public class BoardController {
     return ResponseEntity.ok(response);
   }
 
+  /**
+   * @apiNote create board
+   * @param dto
+   * @return board id
+   * @author lemint
+   * @since 2023-07-30
+   * */
   @Secured({USER, MANAGER, ADMIN})
   @PostMapping(value = "/create")
   public ResponseEntity<?> createBoard(@ModelAttribute @Valid BoardPostRequest dto) throws IOException {
@@ -36,6 +50,13 @@ public class BoardController {
     return ResponseEntity.ok(id);
   }
 
+  /**
+   * @apiNote update board dto
+   * @param id, dto
+   * @return board id
+   * @author lemint
+   * @since 2023-07-30
+   * */
   @Secured({USER, MANAGER, ADMIN})
   @PutMapping("/{id}")
   public ResponseEntity<?> updateBoard(@PathVariable Long id, @RequestBody BoardPostRequest dto) throws IOException {

@@ -70,14 +70,15 @@ public class TokenUtil {
   }
 
   /**
-   * @apiNote set thread local role, id
+   * @apiNote set thread local role, id, token
    * @param id : seq, role
    * @return
    * @since 2023-06-18
    * */
-  public void setThreadLocal(final Long id, final Role role) {
+  public void setThreadLocal(final Long id, final Role role, final String accessToken) {
     signedRole.set(role);
     signedId.set(id);
+    threadAccessToken.set(accessToken);
   }
 
   /**

@@ -20,13 +20,27 @@ public class MemberController {
 
   private final MemberService service;
 
+  /**
+   * @apiNote find member info by userId
+   * @param request
+   * @return response : member info, exception : wrong password, member not found
+   * @author lemint
+   * @since 2023-07-30
+   * */
   @Secured({USER, MANAGER, ADMIN})
   @GetMapping("/get")
-  public ResponseEntity<?> findMemberByIdAndPassword(MemberGetRequest request) {
-    MemberGetResponse response = service.findMemberByIdAndPassword(request);
+  public ResponseEntity<?> findMemberInfoByUserId(@RequestBody @Valid MemberGetRequest request) {
+    MemberGetResponse response = service.findMemberInfoByUserId(request);
     return ResponseEntity.ok(response);
   }
 
+  /**
+   * @apiNote create new member
+   * @param request
+   * @return member seq id
+   * @author lemint
+   * @since 2023-07-30
+   * */
   @Secured(ANONYMOUS)
   @PostMapping("/save")
   public ResponseEntity<?> createMember(@RequestBody @Valid MemberSaveRequest request) {
