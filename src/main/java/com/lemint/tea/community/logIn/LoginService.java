@@ -48,7 +48,6 @@ public class LoginService {
       }
     } else throw new CustomException(ErrorCode.USER_NOT_FOUND); //사용자 없음
 
-
     //기존에 존재하는 토큰 확인
     Token token = tokenService.findTokenByMemberSeq(member.getId());
     if (!Objects.isNull(token)) {
@@ -61,6 +60,7 @@ public class LoginService {
           returnToken = tokenUtil.createAccessToken(member.getId(), member.getUserId(), String.valueOf(signedRole));
         }
       } else throw new CustomException(ErrorCode.VALIDATED_TOKEN_ACCESS);
+
       return TokenResponse.builder()
           .id(member.getId())
           .role(String.valueOf(signedRole))
@@ -69,16 +69,16 @@ public class LoginService {
     }
 
     //Token 설정
-    String accessToken = tokenUtil.createAccessToken(signedId.get(), member.getUserId(), String.valueOf(signedRole.get()));
+    String accessToken = tokenUtil.createAccessToken(member.getId(), member.getUserId(), String.valueOf(member.getRole()));
     //토큰 저장
-    tokenService.saveToken(accessToken, signedId.get());
+    tokenService.saveToken(accessToken, member.getId());
 
     //TreadLocal 저장
     tokenUtil.setThreadLocal(member.getId(), member.getRole(), accessToken);
 
     return TokenResponse.builder()
         .id(member.getId())
-        .role(String.valueOf(signedRole))
+        .role(String.valueOf(member.getRole()))
         .accessToken(accessToken)
         .build();
   }

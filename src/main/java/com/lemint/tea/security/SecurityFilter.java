@@ -47,12 +47,6 @@ public class SecurityFilter extends OncePerRequestFilter {
         role = Role.valueOf(String.valueOf(claims.get("role")));
       }
 
-      if (!Objects.isNull(signedRole) && !Objects.isNull(signedId)) {
-        id = signedId.get();
-        role = signedRole.get();
-        accessToken = threadAccessToken.get();
-      }
-
       SecurityContextHolder.getContext().setAuthentication(
           new UsernamePasswordAuthenticationToken(
               role, "{noop}", AuthorityUtils.createAuthorityList(role.name())

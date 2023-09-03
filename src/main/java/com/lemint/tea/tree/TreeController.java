@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @Controller
-@RequestMapping("/tree")
+@RequestMapping("/check/tree")
 public class TreeController {
 
   /**

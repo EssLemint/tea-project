@@ -4,12 +4,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lemint.tea.common.CommonExtension;
 import com.lemint.tea.community.board.BoardService;
+import com.lemint.tea.community.logIn.LoginService;
 import com.lemint.tea.community.request.BoardPostRequest;
+import com.lemint.tea.community.request.LoginRequest;
 import com.lemint.tea.community.request.MemberGetRequest;
 import com.lemint.tea.community.response.MemberGetResponse;
+import com.lemint.tea.community.token.TokenService;
+import com.lemint.tea.entity.Token;
 import com.lemint.tea.enums.Role;
 import jakarta.persistence.EntityManager;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
@@ -26,6 +33,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.util.Collections;
@@ -52,6 +61,8 @@ class MemberControllerTest extends CommonExtension {
 
   @Autowired
   MemberService service;
+  @Autowired
+  TokenService tokenService;
 
   @BeforeEach
   public void setUp(WebApplicationContext context) {
@@ -65,14 +76,10 @@ class MemberControllerTest extends CommonExtension {
   @Test
   @DisplayName("사용자 정보 조회 단건")
   void findMemberByIdAndPassword() throws Exception {
-    /**
-     * 우선 filter 시큐리티는 spring안으로 들어오기 전에 진행되는 부분이기 때문에
-     * 가라 로그인으로 thread안에 role, id를 배정해주고 해당 thread 변수들을
-     * id, role안에 set.....이후 변수들 사용 << 로직 확인 필요
-     * */
-    setSignedUser();
+    String token = tempLogin();
 
     MvcResult mvcResult = mockMvc.perform(get("/member/get")
+            .header("Authorization", token)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(
                 MemberGetRequest.builder()
@@ -85,6 +92,15 @@ class MemberControllerTest extends CommonExtension {
     String content = mvcResult.getResponse().getContentAsString();
     MemberGetResponse response = objectMapper.readValue(content, MemberGetResponse.class);
     log.info("content = {}", objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(content));
+  }
+
+  private String tempLogin() throws Exception {
+    Long memberSeq = 3L;
+    String id = "test";
+    String pwd = "testpassword1234";
+
+    Token token = tokenService.findTokenByMemberSeq(memberSeq);
+    return token.getAccessToken();
   }
 
   @Test

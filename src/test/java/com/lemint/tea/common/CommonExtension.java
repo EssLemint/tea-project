@@ -81,7 +81,7 @@ public class CommonExtension {
     log.info("signedId = {}", signedId.get());
     log.info("signedRole = {}", signedRole.get());
     log.info("threadAccessToken = {}", threadAccessToken.get());
-    log.info("SecurityContextHolder = {}", SecurityContextHolder.getContext());
+    log.info("CommonExtension SecurityContextHolder = {}", SecurityContextHolder.getContext());
   }
 
 }
