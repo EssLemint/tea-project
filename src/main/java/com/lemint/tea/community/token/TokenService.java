@@ -34,8 +34,8 @@ public class TokenService {
    * @since 2023-07-30
    * */
   @Transactional
-  public Long saveToken(String token, Long id) {
-    Token entity = Token.createToken(id, token, null);
+  public Long saveToken(String token, Long id, String refreshToken) {
+    Token entity = Token.createToken(id, token, refreshToken);
     //refreshToken 적용 예정
     Long tokenId = repository.save(entity).getId();
     return tokenId;
@@ -51,5 +51,17 @@ public class TokenService {
   public Boolean checkToken(Long id, String jwt) {
     Token token = repository.findTokenByMemberId(id);
     return token.getAccessToken().equals(jwt);
+  }
+
+  /**
+   * @apiNote check refresh token
+   * @param jwt, member id
+   * @return true : same token, false : different token
+   * @author lemint
+   * @since 2023-09-04
+   * */
+  public Boolean checkRefreshToken(Long id, String jwt) {
+    Token token = repository.findTokenByMemberId(id);
+    return token.getRefreshToken().equals(jwt);
   }
 }

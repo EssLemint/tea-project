@@ -1,11 +1,14 @@
 package com.lemint.tea.util;
 
+import com.lemint.tea.community.exception.CustomException;
+import com.lemint.tea.community.exception.ErrorCode;
 import com.lemint.tea.community.token.TokenService;
 import com.lemint.tea.enums.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -69,6 +72,21 @@ public class TokenUtil {
      return jwtBuilder.compact();
   }
 
+  public String createRefreshToken(final Long id, final String userId, String role) {
+    return createRefreshJwt(id, userId, role);
+  }
+
+  private String createRefreshJwt(final Long id, final String userId, String role) {
+    return Jwts.builder()
+        .setIssuer("TEA_LEMINT")  //발행인
+        .claim("id", id)  //사용자 seq
+        .claim("userId", userId)  //사용자 userId
+        .claim("role", role)
+        .setIssuedAt(new Date())
+        .signWith(key)
+        .compact();
+  }
+
   /**
    * @apiNote set thread local role, id, token
    * @param id : seq, role
@@ -103,7 +121,21 @@ public class TokenUtil {
   public boolean validateAccessToken(final Long id, final String jwt) {
     if (!tokenService.checkToken(id, jwt)) {
       SecurityContextHolder.clearContext();
-      throw new JwtException("Validate Access Token");
+      throw new CustomException(ErrorCode.VALIDATED_TOKEN_ACCESS);
+    }
+    return true;
+  }
+
+  /**
+   * @apiNote validate refresh token
+   * @param id : seq, jwt
+   * @return true, exception on false
+   * @since 2023-09-04
+   * */
+  public boolean validateRefreshToken(final Long id, final String jwt) {
+    if (!tokenService.checkRefreshToken(id, jwt)) {
+      SecurityContextHolder.clearContext();
+      throw new CustomException(ErrorCode.VALIDATED_TOKEN_ACCESS);
     }
     return true;
   }

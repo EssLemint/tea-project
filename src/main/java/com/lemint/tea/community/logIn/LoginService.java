@@ -54,10 +54,14 @@ public class LoginService {
       String returnToken = token.getAccessToken();
       //발급한 token인지 확인
       Boolean checkToken = tokenService.checkToken(member.getId(), token.getAccessToken());
-      if (checkToken) {
-        if (tokenUtil.checkExpireTime(returnToken)) {
-          //token 갱신
-          returnToken = tokenUtil.createAccessToken(member.getId(), member.getUserId(), String.valueOf(signedRole));
+      if (checkToken) {//발급한 토큰 true
+        if (tokenUtil.checkExpireTime(returnToken)) { //true :만료
+          //accessToken이 만료면 refreshToken 확인 후 재발급
+          if (tokenUtil.validateRefreshToken(member.getId(),token.getRefreshToken())) {
+            //token 갱신
+            returnToken = tokenUtil.createAccessToken(member.getId(), member.getUserId(), String.valueOf(signedRole));
+            token.updateAccessToken(returnToken);
+          }
         }
       } else throw new CustomException(ErrorCode.VALIDATED_TOKEN_ACCESS);
 
@@ -70,8 +74,9 @@ public class LoginService {
 
     //Token 설정
     String accessToken = tokenUtil.createAccessToken(member.getId(), member.getUserId(), String.valueOf(member.getRole()));
+    String refreshToken = tokenUtil.createRefreshToken(member.getId(), member.getUserId(), String.valueOf(member.getRole()));
     //토큰 저장
-    tokenService.saveToken(accessToken, member.getId());
+    tokenService.saveToken(accessToken, member.getId(), refreshToken);
 
     //TreadLocal 저장
     tokenUtil.setThreadLocal(member.getId(), member.getRole(), accessToken);

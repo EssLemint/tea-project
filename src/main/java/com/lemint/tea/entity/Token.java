@@ -58,4 +58,10 @@ public class Token {
     this.accessToken = accessToken;
   }
 
+  public void updateRefreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
+  }
+
+
+
 }
