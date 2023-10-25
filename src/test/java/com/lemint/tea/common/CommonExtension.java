@@ -63,8 +63,9 @@ public class CommonExtension {
 
     if (!role.equals(ROLE_ANONYMOUS)) { //사용자가 익명이 아닐시 토큰 발급
       String accessToken = tokenUtil.createAccessToken(id, "test", Role.SecRoles.USER);
+      String refreshToken = tokenService.findTokenByMemberSeq(id).getRefreshToken();
       threadAccessToken.set(accessToken);
-      tokenService.saveToken(accessToken, id);
+      tokenService.saveToken(accessToken, id, refreshToken);
     }
 
     signedId.set(id);
