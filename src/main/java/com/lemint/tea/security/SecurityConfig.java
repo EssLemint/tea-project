@@ -7,8 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.PathResource;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,9 +29,12 @@ public class SecurityConfig {
     http
         .csrf().disable().cors()
         .and()
+        .headers().frameOptions().sameOrigin() //sockJS는 기본적으로 HTML Iframe 요소를 통한 전공을 허용하지 않도록 설정되는데 해당 내용을 해제한다.
+        .and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
-        .authorizeHttpRequests().anyRequest().permitAll()
+        .authorizeHttpRequests()
+        .anyRequest().permitAll()
         .and()
         .apply(new TokenConfig(tokenUtil));
 
@@ -42,5 +47,10 @@ public class SecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
+
+  @Bean
+  public WebSecurityCustomizer webSecurityCustomizer() {
+    return web -> web.ignoring().requestMatchers("/static/**");
+  }
 }
 

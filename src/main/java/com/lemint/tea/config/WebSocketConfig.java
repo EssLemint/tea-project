@@ -25,20 +25,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
   private final StompHandler stompHandler;
 
-
-  //sockJS Fallback을 이용해 노출할 endpoint 설정
-  @Override
-  public void registerStompEndpoints(StompEndpointRegistry registry) {
-    log.info("end point 선언");
-    //웹소캣이 handshake 하기 위해 연결하는 end point
-    registry.addEndpoint("/ws/chat")
-        .setAllowedOrigins("*")
-        .withSockJS();
-
-    //withSockJS(): WebSocket을 지원하지 않는 브라우저에서 HTTP의 Polling과 같은 방식으로 websocket의 요청을 수행하도록 도와준다.
-    //SockJS를 사용하는 경우, 클라이언트에서 WebSocket 요청을 보낼 때 설정한 엔드포인트 뒤에 /webSocket를 추가해야 정상 작동 된다.
-  }
-
   //메세지 브로커에 관한 설정
   @Override
   public void configureMessageBroker(MessageBrokerRegistry registry) {
@@ -48,6 +34,19 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     //메세지가 상황에 따라서 가공이 필요할때 handler을 탈 수 있는데 이때 /app을 달고오면 핸들러로 전달 된다.
     registry.setApplicationDestinationPrefixes("/pub"); //보내는 사람
+  }
+
+  //sockJS Fallback을 이용해 노출할 endpoint 설정
+  @Override
+  public void registerStompEndpoints(StompEndpointRegistry registry) {
+    log.info("end point 선언");
+    //웹소캣이 handshake 하기 위해 연결하는 end point
+    registry.addEndpoint("/stomp/chat")
+        .setAllowedOriginPatterns("*")
+        .withSockJS();
+
+    //withSockJS(): WebSocket을 지원하지 않는 브라우저에서 HTTP의 Polling과 같은 방식으로 websocket의 요청을 수행하도록 도와준다.
+    //SockJS를 사용하는 경우, 클라이언트에서 WebSocket 요청을 보낼 때 설정한 엔드포인트 뒤에 /webSocket를 추가해야 정상 작동 된다.
   }
 
   @Override

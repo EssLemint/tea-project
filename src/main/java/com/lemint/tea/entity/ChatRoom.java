@@ -24,8 +24,12 @@ public class ChatRoom extends BaseEntity{
   @Comment("채팅방 번호")
   private Long id;
 
+  @Comment("채팅방 고유 ID")
+  @Column(name = "chat_uuid", unique = true)
+  private String chatUuId;
+
   @Comment("채팅방 이름")
-  @Column(length = 30)
+  @Column(name = "name", length = 30)
   private String name;
 
   @ManyToOne
@@ -36,6 +40,9 @@ public class ChatRoom extends BaseEntity{
   @JoinColumn(name = "receive_id")
   private Member receiveId;
 
+  @Comment("유저수")
+  @Column(name = "member_count")
+  private Integer memberCount;
 
   private ChatRoom(Member senderId, Member receiveId) {
     this.senderId = senderId;
@@ -53,5 +60,10 @@ public class ChatRoom extends BaseEntity{
   public void removeChatRoom() {
     remove();
   }
+
+  public void addMemberCount() {
+    this.memberCount++;
+  }
+  public void minusUserCount() {this.memberCount--;}
 
 }

@@ -10,6 +10,7 @@ import com.lemint.tea.entity.Member;
 import com.lemint.tea.enums.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,7 @@ import static com.lemint.tea.enums.Role.*;
 public class MemberService {
 
   private final MemberRepository repository;
-  private final PasswordEncoder passwordEncoder;
+  private final PasswordEncoder passwordEncoder; //디코딩 지원이 안되는구나;; 변경이 필요
 
   public MemberGetResponse findMemberInfoByUserId(MemberGetRequest request) {
     MemberGetDto member = repository.findMemberInfoByUserId(request.getUserId());
@@ -54,4 +55,5 @@ public class MemberService {
     Member newMember = repository.save(member);
     return newMember.getId();
   }
+
 }

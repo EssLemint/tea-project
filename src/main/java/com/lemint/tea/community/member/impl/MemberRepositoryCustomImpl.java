@@ -3,14 +3,12 @@ package com.lemint.tea.community.member.impl;
 import com.lemint.tea.community.member.MemberRepositoryCustom;
 import com.lemint.tea.community.member.dto.MemberGetDto;
 import com.lemint.tea.entity.Member;
-import com.lemint.tea.entity.QMember;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.QMap;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
-import static com.lemint.tea.entity.QMember.*;
+import static com.lemint.tea.entity.QMember.member;
 
 @RequiredArgsConstructor
 public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {

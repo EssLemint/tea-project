@@ -19,7 +19,10 @@ public enum ErrorCode {
 
   //== Token == //
   VALIDATED_TOKEN_ACCESS(HttpStatus.NOT_ACCEPTABLE, "위변조된 토큰입니다."),
-  EXPIRED_TOKEN(HttpStatus.FORBIDDEN, "만료된 토큰입니다.");
+  EXPIRED_TOKEN(HttpStatus.FORBIDDEN, "만료된 토큰입니다."),
+
+  //== REDIS ==//
+  REDIS_ERROR_ON_SET_UP(HttpStatus.INTERNAL_SERVER_ERROR, "레디스 오류 발생");
 
   private final HttpStatus status;
   private final String message;
