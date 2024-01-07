@@ -1,9 +1,13 @@
 package com.lemint.tea.community.chat;
 
+import com.lemint.tea.community.exception.CustomException;
+import com.lemint.tea.community.exception.ErrorCode;
 import com.lemint.tea.enums.Role;
 import com.lemint.tea.util.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -13,6 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 /**
  * MessageChannel에 send 또는 recive의 행동이 일어나기 전의 행동을 구체화 할 수 있다.
@@ -28,26 +34,36 @@ public class StompHandler implements ChannelInterceptor {
 
   @Override
   public Message<?> preSend(Message<?> message, MessageChannel channel) {
-    //JWT token 확인도 가능
-    log.debug("Stomp Handler");
-    StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-//    String authorizationHeader = String.valueOf(accessor.getNativeHeader("Authorization"));
-//    StompCommand command = accessor.getCommand();
 
-    //임시로 token 발급 ANONYMOUS 설정
-    setAuthentication(message, accessor, Role.ROLE_ANONYMOUS);
+    try {
+      //JWT token 확인도 가능
+      StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+      log.info("accessor = {}", accessor);
+      log.info("Authorization = {}", accessor.getNativeHeader("Authorization"));
 
-    return message;
+      if (accessor.getCommand() == StompCommand.CONNECT) {
+        String authorization = accessor.getFirstNativeHeader("Authorization");
+        if (!Objects.isNull(authorization) && !tokenUtil.validateAccessTokenByJwt(authorization)) {
+          throw new CustomException(ErrorCode.VALIDATED_TOKEN_ACCESS);
+        }
+
+        UsernamePasswordAuthenticationToken authenticationToken =
+            new UsernamePasswordAuthenticationToken(Role.ROLE_USER, "{noop}", AuthorityUtils.createAuthorityList(Role.ROLE_USER.name()));
+
+        if (Objects.isNull(SecurityContextHolder.getContext().getAuthentication())) {
+          SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        }
+
+        log.info("SecurityContextHolder = {}", SecurityContextHolder.getContext().getAuthentication());
+        accessor.setUser(authenticationToken);
+        log.info("accessor setUser = {}", accessor);
+      }
+      return message;
+    } catch (NullPointerException e) {
+      throw new CustomException(ErrorCode.SERVER_ERROR);
+    }
   }
 
-  private void setAuthentication(Message<?> message, StompHeaderAccessor headerAccessor, Role role) {
-    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-        role, "{noop}", AuthorityUtils.createAuthorityList(role.name())
-    );
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-    log.debug("setAuthentication = {}", authentication);
-    headerAccessor.setUser(authentication);
-  }
 
   @Override
   public void postSend(Message<?> message, MessageChannel channel, boolean sent) {
@@ -55,13 +71,13 @@ public class StompHandler implements ChannelInterceptor {
     String sessionId = accessor.getSessionId();
     switch (accessor.getCommand()) {
       case CONNECT:
-        log.debug("connect = {}", sessionId); //유저가 connect 된 이후 호출
+        log.info("connect = {}", sessionId); //유저가 connect 된 이후 호출
         break;
       case DISCONNECT:
-        log.debug("disconnect = {}", sessionId); //유저가 disconnect 된 이후 호출
+        log.info("disconnect = {}", sessionId); //유저가 disconnect 된 이후 호출
         break;
       default:
-        log.debug("non connect or disconnect = {}", sessionId);
+        log.info("non connect or disconnect = {}", sessionId);
         break;
     }
   }

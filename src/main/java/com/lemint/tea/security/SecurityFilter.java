@@ -15,9 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Objects;
 
-import static com.lemint.tea.util.TokenUtil.*;
 import static io.jsonwebtoken.lang.Strings.hasLength;
 
 @Slf4j

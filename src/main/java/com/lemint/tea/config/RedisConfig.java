@@ -44,7 +44,6 @@ public class RedisConfig {
       , ChannelTopic channelTopic) {
     RedisMessageListenerContainer container = new RedisMessageListenerContainer();
     container.setConnectionFactory(connectionFactory);
-    container.addMessageListener(listenerAdapter, channelTopic);
     return container;
   }
 
@@ -53,7 +52,7 @@ public class RedisConfig {
    * */
   @Bean
   public MessageListenerAdapter listenerAdapter(RedisSubscriber redisSubscriber) {
-    return new MessageListenerAdapter(redisSubscriber, "sendMessage");
+    return new MessageListenerAdapter(redisSubscriber);
   }
 
   /**

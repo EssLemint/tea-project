@@ -4,6 +4,8 @@ import com.lemint.tea.community.chat.StompHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -21,6 +23,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 @RequiredArgsConstructor
+@Order(Ordered.HIGHEST_PRECEDENCE + 99) //stompHandler가 spring sequrity보다 앞에 오게 설정
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
   private final StompHandler stompHandler;
@@ -42,8 +45,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     log.info("end point 선언");
     //웹소캣이 handshake 하기 위해 연결하는 end point
     registry.addEndpoint("/stomp/chat")
-        .setAllowedOriginPatterns("*")
+        .setAllowedOriginPatterns("**")
         .withSockJS();
+
+    registry.addEndpoint("/stomp/chat")
+        .setAllowedOriginPatterns("**"); //API는 withSockJS() 설정을 뺴야함
 
     //withSockJS(): WebSocket을 지원하지 않는 브라우저에서 HTTP의 Polling과 같은 방식으로 websocket의 요청을 수행하도록 도와준다.
     //SockJS를 사용하는 경우, 클라이언트에서 WebSocket 요청을 보낼 때 설정한 엔드포인트 뒤에 /webSocket를 추가해야 정상 작동 된다.
@@ -51,7 +57,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
   @Override
   public void configureClientInboundChannel(ChannelRegistration registration) {
-    //session의 connect, disconnect의 시점을 알고 싶다면
+    //session의 connect, disconnect의 시점을 알고 싶다면, JWT 검증 진행
     registration.interceptors(stompHandler);
   }
 }

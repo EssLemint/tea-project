@@ -45,8 +45,20 @@ public class TokenService {
    * @author lemint
    * @since 2023-07-30
    * */
-  public Boolean checkToken(Long id, String jwt) {
+  public Boolean checkTokenByIdAndJwt(Long id, String jwt) {
     Token token = repository.findTokenByMemberId(id);
+    return token.getAccessToken().equals(jwt);
+  }
+
+  /**
+   * @apiNote check token entity
+   * @param jwt
+   * @return true : same token, false : different token
+   * @author lemint
+   * @since 2023-07-30
+   * */
+  public Boolean checkTokenByJwt(String jwt) {
+    Token token = repository.findTokenByJwt(jwt);
     return token.getAccessToken().equals(jwt);
   }
 

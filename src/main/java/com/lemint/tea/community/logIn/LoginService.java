@@ -53,7 +53,7 @@ public class LoginService {
     if (!Objects.isNull(token)) {
       String returnToken = token.getAccessToken();
       //발급한 token인지 확인
-      Boolean checkToken = tokenService.checkToken(member.getId(), token.getAccessToken());
+      Boolean checkToken = tokenService.checkTokenByIdAndJwt(member.getId(), token.getAccessToken());
       if (checkToken) {//발급한 토큰 true
         if (tokenUtil.checkExpireTime(returnToken)) { //true :만료
           //accessToken이 만료면 refreshToken 확인 후 재발급

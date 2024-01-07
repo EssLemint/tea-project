@@ -20,4 +20,13 @@ public class TokenRepositoryCustomImpl implements TokenRepositoryCustom {
         .where(token.memberId.eq(id));
     return query.fetchOne();
   }
+
+  @Override
+  public Token findTokenByJwt(String jwt) {
+    JPAQuery<Token> query = queryFactory.select(token)
+        .from(token)
+        .where(token.accessToken.eq(jwt));
+
+    return query.fetchOne();
+  }
 }

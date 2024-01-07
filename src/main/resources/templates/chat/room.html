@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
 <th:block th:replace="~{/layout/basic :: setContent(~{this :: content})}">
   <th:block th:fragment="content">
 
@@ -25,24 +24,26 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script th:inline="javascript">
-      $(document).ready(function () {
+      $(document).ready(function (head) {
         var roomId = '1';
         var roomName = 'test_room_name';
-        var username = 'test_user_name';
+        var username = 'test1234';
 
         console.log(roomName + ", " + roomId + ", " + username);
 
         var sockJs = new SockJS("/stomp/chat");
         //1. SockJS를 내부에 들고있는 stomp를 내어줌
         var stomp = Stomp.over(sockJs);
-        console.debug(stomp);
+
+        stomp.connect({}, onConnect, onError);
 
         //2. connection이 맺어지면 실행
-        stomp.connect({}, function () {
-          console.log("STOMP Connection 연결 성공")
+        function onConnect() {
+          console.log("STOMP Connection 연결 성공");
 
-          //4. subscribe(path, callback)으로 메세지를 받을 수 있음
+
           stomp.subscribe("/sub/chat/room/" + roomId, function (chat) {
             var content = JSON.parse(chat.body);
 
@@ -65,8 +66,12 @@
           });
 
           //3. send(path, header, message)로 메세지를 보낼 수 있음
-          stomp.send('/pub/chat/enter', {}, JSON.stringify({roomId: roomId, writer: username}))
-        });
+          stomp.send('/pub/chat/enter', {}, JSON.stringify({roomId: roomId, writer: username}));
+        }
+
+        function onError() {
+          console.log("connection Error");
+        }
 
         $("#button-send").on("click", function (e) {
           var msg = document.getElementById("msg");

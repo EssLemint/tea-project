@@ -17,6 +17,9 @@ public enum ErrorCode {
   BAD_PASSWORD(HttpStatus.BAD_REQUEST,"비밀번호가 일치하지 않습니다."),
   USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 사용자를 찾을 수 없습니다."),
 
+  //== 500 ==//
+  SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러가 발생했습니다."),
+
   //== Token == //
   VALIDATED_TOKEN_ACCESS(HttpStatus.NOT_ACCEPTABLE, "위변조된 토큰입니다."),
   EXPIRED_TOKEN(HttpStatus.FORBIDDEN, "만료된 토큰입니다."),

@@ -9,6 +9,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -118,8 +119,22 @@ public class TokenUtil {
    * @return true, exception on false
    * @since 2023-06-18
    * */
-  public boolean validateAccessToken(final Long id, final String jwt) {
-    if (!tokenService.checkToken(id, jwt)) {
+  public boolean validateAccessTokenByIdAndJwt(final Long id, final String jwt) {
+    if (!tokenService.checkTokenByIdAndJwt(id, jwt)) {
+      SecurityContextHolder.clearContext();
+      throw new CustomException(ErrorCode.VALIDATED_TOKEN_ACCESS);
+    }
+    return true;
+  }
+
+  /**
+   * @apiNote validate access token
+   * @param jwt
+   * @return true, exception on false
+   * @since 2023-06-18
+   * */
+  public boolean validateAccessTokenByJwt(final String jwt) {
+    if (!tokenService.checkTokenByJwt(jwt)) {
       SecurityContextHolder.clearContext();
       throw new CustomException(ErrorCode.VALIDATED_TOKEN_ACCESS);
     }
