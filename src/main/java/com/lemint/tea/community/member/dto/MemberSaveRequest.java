@@ -14,15 +14,13 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 public class MemberSaveRequest {
 
-  @NotNull
   @NotEmpty
   private String userId;
 
-  @NotNull
   @Length(min = 8, max = 30)
   private String password;
 
-  @NotNull
+  @NotEmpty
   @Length(max = 50)
   private String name;
 }

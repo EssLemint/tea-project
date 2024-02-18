@@ -16,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.lemint.tea.enums.Role.ANONYMOUS;
 import static io.jsonwebtoken.lang.Strings.hasLength;
 
 @Slf4j
@@ -34,7 +35,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     try {
       String authorization = request.getHeader("Authorization");
       Long id = 0L;
-      Role role = Role.ROLE_ANONYMOUS;
+      Role role = ANONYMOUS;
       String accessToken = "";
 
       if (hasLength(authorization)) {

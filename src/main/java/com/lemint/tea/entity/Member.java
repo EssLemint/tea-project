@@ -58,4 +58,8 @@ public class Member extends BaseEntity{
     this.password = password;
     this.name = name;
   }
+
+  public void updateTempPassword(String password) {
+    this.password = password;
+  }
 }

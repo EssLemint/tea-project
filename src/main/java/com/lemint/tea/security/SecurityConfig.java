@@ -17,6 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @RequiredArgsConstructor
 @EnableMethodSecurity(securedEnabled = true)
@@ -33,23 +35,20 @@ public class SecurityConfig {
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     log.info("================= SecurityConfig =================  START =================");
     http
-        .headers().frameOptions().sameOrigin() //sockJS는 기본적으로 HTML Iframe 요소를 통한 전공을 허용하지 않도록 설정되는데 해당 내용을 해제한다.
-        .and().csrf(AbstractHttpConfigurer::disable)
+        //.headers().frameOptions().sameOrigin() //sockJS는 기본적으로 HTML Iframe 요소를 통한 전공을 허용하지 않도록 설정되는데 해당 내용을 해제한다.
+        //.and()
+        .csrf(AbstractHttpConfigurer::disable)
         .cors()
         .and()
-        .formLogin(formLogin -> formLogin
-            .loginPage("/login")
-            .permitAll()
-        )
-        .sessionManagement((sessionManagement) ->
+        .sessionManagement(sessionManagement ->
             sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
-        .authorizeHttpRequests((authorizeRequests) ->
+        .authorizeHttpRequests(authorizeRequests ->
             authorizeRequests.anyRequest().permitAll()
         )
         .apply(new TokenConfig(tokenUtil));
 
-    log.info("================= SecurityConfig =================  END =================");
+    log.info("================= SecurityConfig ================= END =================");
     return http.build();
   }
 

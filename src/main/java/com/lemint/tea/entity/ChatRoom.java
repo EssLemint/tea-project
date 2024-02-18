@@ -44,13 +44,14 @@ public class ChatRoom extends BaseEntity{
   @Column(name = "member_count")
   private Integer memberCount;
 
-  private ChatRoom(Member senderId, Member receiveId) {
-    this.senderId = senderId;
-    this.receiveId = receiveId;
+  public static ChatRoom createChatRoom(Member senderId, Member receiveId, String chatUuId) {
+    return new ChatRoom(senderId, receiveId, chatUuId);
   }
 
-  public static ChatRoom createChatRoom(Member senderId, Member receiveId) {
-    return new ChatRoom(senderId, receiveId);
+  private ChatRoom(Member senderId, Member receiveId, String chatUuId) {
+    this.senderId = senderId;
+    this.receiveId = receiveId;
+    this.chatUuId = chatUuId;
   }
 
   public void updateChatRoom(String name) {

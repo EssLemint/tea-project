@@ -16,6 +16,7 @@ public enum ErrorCode {
   NOT_VALID_METHOD_ARGUMENT(HttpStatus.BAD_REQUEST,"REQUEST를 확인해주세요"),
   BAD_PASSWORD(HttpStatus.BAD_REQUEST,"비밀번호가 일치하지 않습니다."),
   USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 사용자를 찾을 수 없습니다."),
+  NOT_ADMIN(HttpStatus.FORBIDDEN, "관리자 계정이 아닙니다."),
 
   //== 500 ==//
   SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러가 발생했습니다."),

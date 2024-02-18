@@ -107,8 +107,9 @@ public class TokenUtil {
    * @since 2023-06-18
    * */
   public Claims checkJwt(final String jwt) {
-    return Jwts.parser()
+    return Jwts.parserBuilder()
         .setSigningKey(key)
+        .build()
         .parseClaimsJws(jwt.replace("Bearer ", "").trim())
         .getBody();
   }

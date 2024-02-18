@@ -11,20 +11,17 @@ public class ChatMessageDto {
   /**
    * chatRoomId : 채팅방 번호
    * senderId : 채팅 보낸 사람
-   * receiveId : 채팅 받는 사람
    * message : 메세지
    * */
 
   private Long chatRoomId;
   private Long senderId;
-  private Long receiveId;
   private String message;
 
   @Builder
-  public ChatMessageDto(Long chatRoomId, Long senderId, Long receiveId, String message) {
+  public ChatMessageDto(Long chatRoomId, Long senderId, String message) {
     this.chatRoomId = chatRoomId;
     this.senderId = senderId;
-    this.receiveId = receiveId;
     this.message = message;
   }
 
@@ -33,7 +30,6 @@ public class ChatMessageDto {
     return "ChatMessageDto{" +
         "chatRoomId=" + chatRoomId +
         ", senderId=" + senderId +
-        ", receiveId=" + receiveId +
         ", message='" + message + '\'' +
         '}';
   }

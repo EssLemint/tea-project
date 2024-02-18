@@ -39,7 +39,6 @@ public class StompHandler implements ChannelInterceptor {
       //JWT token 확인도 가능
       StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
       log.info("accessor = {}", accessor);
-      log.info("Authorization = {}", accessor.getNativeHeader("Authorization"));
 
       if (accessor.getCommand() == StompCommand.CONNECT) {
         String authorization = accessor.getFirstNativeHeader("Authorization");
@@ -48,7 +47,7 @@ public class StompHandler implements ChannelInterceptor {
         }
 
         UsernamePasswordAuthenticationToken authenticationToken =
-            new UsernamePasswordAuthenticationToken(Role.ROLE_USER, "{noop}", AuthorityUtils.createAuthorityList(Role.ROLE_USER.name()));
+            new UsernamePasswordAuthenticationToken(Role.USER, "{noop}", AuthorityUtils.createAuthorityList(Role.USER.name()));
 
         if (Objects.isNull(SecurityContextHolder.getContext().getAuthentication())) {
           SecurityContextHolder.getContext().setAuthentication(authenticationToken);

@@ -15,8 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.lemint.tea.common.ThreadToken.threadAccessToken;
-import static com.lemint.tea.enums.Role.ROLE_ANONYMOUS;
-import static com.lemint.tea.enums.Role.ROLE_USER;
+import static com.lemint.tea.enums.Role.ANONYMOUS;
+import static com.lemint.tea.enums.Role.USER;
 import static com.lemint.tea.util.TokenUtil.signedId;
 import static com.lemint.tea.util.TokenUtil.signedRole;
 
@@ -40,7 +40,7 @@ public class CommonExtension {
    * */
   public void setAnonymous() {
     log.info("setAnonymous");
-    authentication(0L, ROLE_ANONYMOUS);
+    authentication(0L, ANONYMOUS);
   }
 
   /**
@@ -50,7 +50,7 @@ public class CommonExtension {
    * */
   public void setSignedUser() {
     log.info("setSignedUser");
-    authentication(3L, ROLE_USER);
+    authentication(3L, USER);
   }
 
   /**
@@ -61,7 +61,7 @@ public class CommonExtension {
   private void authentication(Long id, Role role) {
     log.info("create authentication");
 
-    if (!role.equals(ROLE_ANONYMOUS)) { //사용자가 익명이 아닐시 토큰 발급
+    if (!role.equals(ANONYMOUS)) { //사용자가 익명이 아닐시 토큰 발급
       String accessToken = tokenUtil.createAccessToken(id, "test", Role.SecRoles.USER);
       String refreshToken = tokenService.findTokenByMemberSeq(id).getRefreshToken();
       threadAccessToken.set(accessToken);

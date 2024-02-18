@@ -15,9 +15,4 @@ public class ChatRoomDto implements Serializable {
 
   private String roomId;
 
-  public static ChatRoomDto create (String roomId) {
-    ChatRoomDto chatRoomDto = new ChatRoomDto();
-    chatRoomDto.roomId = UUID.randomUUID().toString();
-    return chatRoomDto;
-  }
 }
