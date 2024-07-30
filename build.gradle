@@ -84,6 +84,7 @@ dependencies {
 	//FreeMaker
 	implementation 'org.springframework.boot:spring-boot-starter-freemarker'
 
+
 	testAnnotationProcessor 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 }
